@@ -80,8 +80,33 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
     }
+
+    function checkCollisions(){
+        if (player.y <= 83/5){
+            reset();
+            console.log("You Won!");
+            return;
+        }
+
+        allEnemies.forEach(function(enemy){
+            if (enemy.y === player.y){
+                if (player.x >= enemy.x && player.x < enemy.x+79){
+                    reset();
+                    console.log("You Lost!");
+                    return;
+                } else if ( player.x < enemy.x && player.x+79 >= enemy.x){
+                    reset();
+                    console.log("You Lost!");
+                    return;
+                }
+            }
+        });
+
+
+    }
+
 
     /* This is called by the update function and loops through all of the
      * objects within your allEnemies array as defined in app.js and calls
@@ -160,6 +185,7 @@ var Engine = (function(global) {
      */
     function reset() {
         // noop
+        resetPlayObjects();
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -171,7 +197,8 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/char-cat-girl.png'
     ]);
     Resources.onReady(init);
 
