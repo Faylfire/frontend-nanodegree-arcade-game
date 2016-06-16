@@ -24,10 +24,13 @@ var Engine = (function(global) {
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime;
+    var winFlag = 0;
+    var chooseAvatar = 1;
 
     canvas.width = 505;
     canvas.height = 606;
     doc.body.appendChild(canvas);
+
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -83,8 +86,12 @@ var Engine = (function(global) {
         checkCollisions();
     }
 
+
     function checkCollisions(){
+        var timeWait = 1000;
         if (player.y <= 83/5){
+            winFlag = 1;
+            setTimeout(function(){winFlag = 0;}, timeWait);
             reset();
             console.log("You Won!");
             return;
@@ -93,10 +100,14 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy){
             if (enemy.y === player.y){
                 if (player.x >= enemy.x && player.x < enemy.x+79){
+                    winFlag = 2;
+                    setTimeout(function(){winFlag = 0;}, timeWait);
                     reset();
                     console.log("You Lost!");
                     return;
                 } else if ( player.x < enemy.x && player.x+79 >= enemy.x){
+                    winFlag = 2;
+                    setTimeout(function(){winFlag = 0;}, timeWait);
                     reset();
                     console.log("You Lost!");
                     return;
@@ -104,6 +115,22 @@ var Engine = (function(global) {
             }
         });
 
+
+    }
+
+    function winLoss(message){
+
+        console.log("In WinLoss");
+        ctx.font = "64px Impact";
+        ctx.textAlign = "center";
+
+
+        ctx.fillStyle = "white";
+        ctx.fillText(message, 252, 240);
+
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 3;
+        ctx.strokeText(message, 252, 240);
 
     }
 
@@ -120,6 +147,12 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+        selection.changeColor();
+        if (selection.chosen && chooseAvatar===1){
+            console.log("TRUEEEE I CHOSE");
+            chooseAvatar = 0;
+            player.update(0,0,selection.character);
+        }
     }
 
     /* This function initially draws the "game level", it will then call
@@ -161,7 +194,18 @@ var Engine = (function(global) {
             }
         }
 
-        renderEntities();
+        if (winFlag === 1){
+            winLoss("You Won!");
+
+        }else if (winFlag === 2){
+            winLoss("You Lose!");
+        }else if (chooseAvatar === 1 ){
+            console.log("in chooseAvatar 1");
+            renderAvatars();
+        } else {
+            console.log("in RenderEntities");
+            renderEntities();
+        }
     }
 
     /* This function is called by the render function and is called on each game
@@ -184,8 +228,27 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
+        chooseAvatar = 1;
         // noop
         resetPlayObjects();
+    }
+
+    function renderAvatars(){
+        var avatarImages = [
+                'images/char-boy.png',   // 1st char
+                'images/char-cat-girl.png',   // Row 1 of 3 of stone
+                'images/char-horn-girl.png',   // Row 2 of 3 of stone
+                'images/char-pink-girl.png',   // Row 3 of 3 of stone
+                'images/char-princess-girl.png'   // 5th char right-most
+            ]
+
+        winLoss("Choose an Avatar!");
+        for (var charNum = 0; charNum < avatarImages.length; charNum++) {
+
+            ctx.drawImage(Resources.get(avatarImages[charNum]), charNum * 101, 4 * 83-20);
+        }
+        selection.render();
+
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -197,8 +260,12 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png',
-        'images/char-cat-girl.png'
+        'images/char-boy.png',   // 1st char
+        'images/char-cat-girl.png',   // Row 1 of 3 of stone
+        'images/char-horn-girl.png',   // Row 2 of 3 of stone
+        'images/char-pink-girl.png',   // Row 3 of 3 of stone
+        'images/char-princess-girl.png'   // 5th char right-most
+
     ]);
     Resources.onReady(init);
 
@@ -207,4 +274,5 @@ var Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
+    global.chooseAvatar = chooseAvatar;
 })(this);

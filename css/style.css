@@ -4,7 +4,6 @@ body {
 }
 
 canvas {
-
     /*border: 2px solid steelblue;*/
     border-radius: 5px;
 }
@@ -12,4 +11,24 @@ canvas {
 h1 {
     font-family: Roboto, sans-serif;
     color: teal;
+}
+
+.dpad {
+    float: right;
+    margin-top:300px;
+    margin-right:200px;
+    height:150px;
+    width: 200px;
+    background-color: steelblue;
+}
+
+
+.up {
+    width: 80px;
+    margin:20px 50px 10px 50px;
+}
+
+button {
+    height:48px;
+    width:48px;
 }

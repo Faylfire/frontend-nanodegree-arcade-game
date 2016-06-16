@@ -38,13 +38,21 @@ Enemy.prototype.render = function() {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-var Player = function(){
-    this.sprite = 'images/char-cat-girl.png';
+var Player = function(chosen = 0){
+    this.avatarImages = [
+                'images/char-boy.png',   // 1st char
+                'images/char-cat-girl.png',   // Row 1 of 3 of stone
+                'images/char-horn-girl.png',   // Row 2 of 3 of stone
+                'images/char-pink-girl.png',   // Row 3 of 3 of stone
+                'images/char-princess-girl.png'   // 5th char right-most
+            ]
+
+    this.sprite = this.avatarImages[chosen];
     this.x = 101*2;
-    this.y = 83*5;
+    this.y = 83*5-20;
 };
 
-Player.prototype.update = function(xChange, yChange) {
+Player.prototype.update = function(xChange, yChange, avatar) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
@@ -53,9 +61,12 @@ Player.prototype.update = function(xChange, yChange) {
         if (this.x+xChange <= 101*4 && this.x+xChange >= 0){
             this.x += xChange;
         }
-        if (this.y+yChange <= 83*5 && this.y+yChange >= 0){
+        if (this.y+yChange <= 83*5 && this.y+yChange >= -20){
             this.y += yChange;
         }
+    }
+    if (avatar){
+        this.sprite = this.avatarImages[avatar];
     }
 };
 
@@ -85,17 +96,76 @@ Player.prototype.handleInput = function(direction){
 
 };
 
+var SelectionBox = function(){
+    this.x = 101*2;
+    this.y = 83*5-45;
+    this.character = 0;
+    this.chosen = false;
+    this.colorCount = 0;
+    this.color = 'orangered';
+};
+
+SelectionBox.prototype.render = function() {
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = this.color;
+    ctx.strokeRect(this.x, this.y, 101, 90);
+};
+
+SelectionBox.prototype.update = function(xChange) {
+    if (this.x+xChange >= 0 && this.x+xChange <=101*4){
+        this.x += xChange;
+    }
+};
+
+SelectionBox.prototype.changeColor = function(){
+    var colors = ["orangered", "tomato", "coral", "darkorange", "orange"];
+
+    this.color = colors[Math.floor(this.colorCount/15)];
+    if (this.colorCount+1 < 70){
+        this.colorCount++;
+    } else{
+        this.colorCount = 0;
+    }
+}
+
+SelectionBox.prototype.handleInput = function(direction){
+    var dx = 101;
+
+
+    switch(direction){
+        case 'left':
+            this.update(-dx,0);
+            break;
+        case 'right':
+            this.update(dx,0);
+            break;
+        case 'enter':
+            this.character = this.x/101;
+            this.chosen = true;
+            chooseAvatar = 0;
+            break;
+        default:
+            /* ... */
+    }
+
+};
+
 var player;
 var allEnemies = [];
+var avatarChosen = 0;
+var selection;
+
 
 function resetPlayObjects(){
+    chooseAvatar = 1;
+    selection = new SelectionBox();
     player = new Player();
     allEnemies = [];
     for (i=0; i < 5; i++){
-        allEnemies.push(new Enemy(randomStart(-500)+200,(i%3+1)*83,randomSpeed(45)));
+        allEnemies.push(new Enemy(randomStart(-500)+200,(i%3+1)*83-20,randomSpeed(45)));
     }
-    allEnemies.push(new Enemy(randomStart(-300), 1*83,randomSpeed(75)));
-    allEnemies.push(new Enemy(randomStart(-500), 2*83,randomSpeed(60)));
+    allEnemies.push(new Enemy(randomStart(-300), 1*83-20,randomSpeed(75)));
+    allEnemies.push(new Enemy(randomStart(-500), 2*83-20,randomSpeed(60)));
 
 }
 
@@ -114,13 +184,21 @@ function randomStart(range){
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
+document.addEventListener('keydown', function(e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',
         39: 'right',
-        40: 'down'
+        40: 'down',
+        13: 'enter',
     };
 
-    player.handleInput(allowedKeys[e.keyCode]);
+    console.log(chooseAvatar);
+    if (chooseAvatar === 1){
+        selection.handleInput(allowedKeys[e.keyCode]);
+    } else{
+        player.handleInput(allowedKeys[e.keyCode]);
+    }
+
+
 });
