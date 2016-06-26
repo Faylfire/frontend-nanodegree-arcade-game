@@ -1,6 +1,6 @@
 //Game State Object
 
-var GameState = function(topScore = [100,85,5]){
+var GameState = function(topScore = [['Boy',100],['Cat Girl',85],['Horn Girl',5]]){
     var stateArray = ["Selection", "Win", "Loss", "Play", "Top Score"]
 
     this.state = 0;
@@ -10,16 +10,33 @@ var GameState = function(topScore = [100,85,5]){
 };
 
 function compareNumbers(a,b){
-    return a - b;
+    return a[1] - b[1];
 }
 
+function Comparator(a, b) {
+   if (a[1] < b[1]) return -1;
+   if (a[1] > b[1]) return 1;
+   return 0;
+ }
+
 GameState.prototype.update = function() {
+    var avatar = [
+                'Boy',   // 1st char
+                'Cat Girl',   // Row 1 of 3 of stone
+                'Horn Girl',   // Row 2 of 3 of stone
+                'Pink Girl',   // Row 3 of 3 of stone
+                'Crown Girl'   // 5th char right-most
+            ]
     //this.state = state;
     if (this.state === 2){
-        this.topScore.push(this.score);
+        avaIndex = player.avatarImages.indexOf(player.sprite);
+        this.topScore.push([avatar[avaIndex],this.score]);
         this.topScore.sort(compareNumbers);
+        //this.topScore = this.topScore.sort(Comparator);
         this.topScore.reverse();
         this.topScore = this.topScore.slice(0,3);
+
+        //this.topScore = this.topScore.sort(Comparator);
     }
 };
 
@@ -248,7 +265,6 @@ function resetPlayObjects(){
     }
     allEnemies.push(new Enemy(randomStart(-300), 1*83-20,randomSpeed(75)));
     allEnemies.push(new Enemy(randomStart(-500), 2*83-20,randomSpeed(60)));
-
 
 
 }

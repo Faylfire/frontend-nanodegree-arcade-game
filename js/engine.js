@@ -68,6 +68,7 @@ var Engine = (function(global) {
      */
     function init() {
         reset();
+        updateHighScore();
         lastTime = Date.now();
         main();
     }
@@ -145,9 +146,13 @@ var Engine = (function(global) {
 
     function updateHighScore(){
         var tableCol = $("td");
-        for (item in tableCol){
+        console.log(tableCol);
+        console.log(gameState.topScore);
+        for (item=0; item < tableCol.length; item++){
             if (item%2){
-                tableCol[item].textContent = gameState.topScore[Math.floor(item/2)];
+                tableCol[item].textContent = gameState.topScore[Math.floor(item/2)][1];
+            } else {
+                tableCol[item].textContent = gameState.topScore[Math.ceil(item/2)][0];
             }
         }
 
