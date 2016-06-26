@@ -181,11 +181,14 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-        player.update();
-        selection.changeColor();
-        if (selection.chosen && gameState.state===0){
-            chooseAvatar = 0;
+
+        if (gameState.state === 0){
+            selection.changeColor();
+        }
+        if (selection.chosen && gameState.state === 0){
+            //console.log("I'm here");
             player.update(0,0,selection.character);
+            gameState.state = 3;
         }
     }
 

@@ -124,6 +124,11 @@ Player.prototype.update = function(xChange, yChange, avatar) {
     }
 };
 
+Player.prototype.resetPosition = function(){
+    this.x = 101*2;
+    this.y = 83*5-20;
+};
+
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
@@ -167,6 +172,12 @@ SelectionBox.prototype.render = function() {
     ctx.strokeRect(this.x, this.y, 101, 90);
 };
 
+SelectionBox.prototype.resetPosition = function(){
+    this.x = 101*2;
+    this.y = 83*5-45;
+    this.chosen = false;
+};
+
 SelectionBox.prototype.update = function(xChange) {
     if (this.x+xChange >= 0 && this.x+xChange <=101*4){
         this.x += xChange;
@@ -198,8 +209,10 @@ SelectionBox.prototype.handleInput = function(direction){
             break;
         case 'enter':
             this.character = this.x/101;
+            //console.log("before: "+this.chosen + this.character);
             this.chosen = true;
-            gameState.state = 3;
+            //console.log("after: "+ this.chosen + this.character);
+            //gameState.state = 3;
             break;
         default:
             /* ... */
@@ -220,12 +233,13 @@ var selection;
 var gameState;
 
 gameState = new GameState();
-
+player = new Player();
+selection = new SelectionBox();
 
 function resetPlayObjects(){
     chooseAvatar = 1;
-    selection = new SelectionBox();
-    player = new Player();
+    selection.resetPosition();
+    player.resetPosition();
     allEnemies = [];
     allBonus = [];
     for (i=0; i < 5; i++){
@@ -265,7 +279,9 @@ document.addEventListener('keydown', function(e) {
 
     console.log(gameState.state);
     if (gameState.state === 0){
+        console.log("selection: "+ allowedKeys[e.keyCode]);
         selection.handleInput(allowedKeys[e.keyCode]);
+
     } else if (gameState.state === 3) {
         player.handleInput(allowedKeys[e.keyCode]);
     }
