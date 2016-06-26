@@ -24,8 +24,8 @@ var Engine = (function(global) {
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime;
-    var winFlag = 0;
-    var chooseAvatar = 1;
+    //var winFlag = 0;
+    //var chooseAvatar = 1;
 
     canvas.width = 505;
     canvas.height = 606;
@@ -90,38 +90,73 @@ var Engine = (function(global) {
     function checkCollisions(){
         var timeWait = 1000;
         if (player.y <= 83/5){
-            winFlag = 1;
-            setTimeout(function(){winFlag = 0;}, timeWait);
+            gameState.state = 1;
+            setTimeout(function(){gameState.state = 3;}, timeWait);
             reset();
-            console.log("You Won!");
+            //console.log("You Won!");
             return;
         }
 
         allEnemies.forEach(function(enemy){
             if (enemy.y === player.y){
                 if (player.x >= enemy.x && player.x < enemy.x+79){
-                    winFlag = 2;
-                    setTimeout(function(){winFlag = 0;}, timeWait);
+                    gameState.state = 2;
+                    setTimeout(function(){
+                        gameState.update();
+                        updateHighScore();
+                        gameState.state = 0;
+                        gameState.score = 0;
+                    }, timeWait);
                     reset();
-                    console.log("You Lost!");
+                    //console.log("You Lost!");
+                    console.log(gameState.topScore);
                     return;
                 } else if ( player.x < enemy.x && player.x+79 >= enemy.x){
-                    winFlag = 2;
-                    setTimeout(function(){winFlag = 0;}, timeWait);
+                    gameState.state = 2;
+                    setTimeout(function(){
+                        gameState.update();
+                        updateHighScore();
+                        gameState.state = 0;
+                        gameState.score = 0;}, timeWait);
                     reset();
-                    console.log("You Lost!");
+                    //console.log("You Lost!");
+                    console.log(gameState.topScore);
                     return;
                 }
             }
         });
 
+        allBonus.forEach(function(item){
+            if (item.y === player.y && item.show===1) {
+                if (player.x >= item.x && player.x < item.x+70) {
+                    item.show = 0;
+                    gameState.score += item.points;
+
+                } else if (player.x < item.x && player.x+70 >= item.x){
+                    item.show = 0;
+                    gameState.score += item.points;
+                }
+            }
+
+        });
+
+
+    }
+
+    function updateHighScore(){
+        var tableCol = $("td");
+        for (item in tableCol){
+            if (item%2){
+                tableCol[item].textContent = gameState.topScore[Math.floor(item/2)];
+            }
+        }
 
     }
 
     function winLoss(message){
 
         console.log("In WinLoss");
-        ctx.font = "64px Impact";
+        ctx.font = "56px Impact";
         ctx.textAlign = "center";
 
 
@@ -148,8 +183,7 @@ var Engine = (function(global) {
         });
         player.update();
         selection.changeColor();
-        if (selection.chosen && chooseAvatar===1){
-            console.log("TRUEEEE I CHOSE");
+        if (selection.chosen && gameState.state===0){
             chooseAvatar = 0;
             player.update(0,0,selection.character);
         }
@@ -194,16 +228,16 @@ var Engine = (function(global) {
             }
         }
 
-        if (winFlag === 1){
-            winLoss("You Won!");
+        if (gameState.state === 1){
+            winLoss("You Won! Score: "+ gameState.score);
 
-        }else if (winFlag === 2){
-            winLoss("You Lose!");
-        }else if (chooseAvatar === 1 ){
-            console.log("in chooseAvatar 1");
+        }else if (gameState.state === 2){
+            winLoss("You Lose! Score: " + gameState.score);
+        }else if (gameState.state === 0 ){
+            //console.log("in chooseAvatar 1");
             renderAvatars();
         } else {
-            console.log("in RenderEntities");
+            //console.log("in RenderEntities");
             renderEntities();
         }
     }
@@ -216,9 +250,13 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
+        allBonus.forEach(function(item){
+            item.render();
+        });
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
+
 
         player.render();
     }
@@ -228,7 +266,7 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        chooseAvatar = 1;
+        //gameState.state = 0;
         // noop
         resetPlayObjects();
     }
@@ -264,7 +302,13 @@ var Engine = (function(global) {
         'images/char-cat-girl.png',   // Row 1 of 3 of stone
         'images/char-horn-girl.png',   // Row 2 of 3 of stone
         'images/char-pink-girl.png',   // Row 3 of 3 of stone
-        'images/char-princess-girl.png'   // 5th char right-most
+        'images/char-princess-girl.png',
+        'images/Gem Blue.png',   // 1st char
+        'images/Gem Green.png',   // Row 1 of 3 of stone
+        'images/Gem Orange.png',   // Row 2 of 3 of stone
+        'images/Key.png',   // Row 3 of 3 of stone
+        'images/Heart.png',
+        'images/Star.png'  // 5th char right-most
 
     ]);
     Resources.onReady(init);
@@ -274,5 +318,5 @@ var Engine = (function(global) {
      * from within their app.js files.
      */
     global.ctx = ctx;
-    global.chooseAvatar = chooseAvatar;
+    //global.chooseAvatar = chooseAvatar;
 })(this);

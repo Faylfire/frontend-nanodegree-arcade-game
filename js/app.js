@@ -1,3 +1,59 @@
+//Game State Object
+
+var GameState = function(topScore = [100,85,5]){
+    var stateArray = ["Selection", "Win", "Loss", "Play", "Top Score"]
+
+    this.state = 0;
+    this.score = 0;
+    this.topScore = topScore;
+
+};
+
+function compareNumbers(a,b){
+    return a - b;
+}
+
+GameState.prototype.update = function() {
+    //this.state = state;
+    if (this.state === 2){
+        this.topScore.push(this.score);
+        this.topScore.sort(compareNumbers);
+        this.topScore.reverse();
+        this.topScore = this.topScore.slice(0,3);
+    }
+};
+
+
+//Coins object constructor
+
+var BonusObjects = function(x, y, points){
+    this.BonusImages = [
+                'images/Gem Blue.png',   // 1st char
+                'images/Gem Green.png',   // Row 1 of 3 of stone
+                'images/Gem Orange.png',   // Row 2 of 3 of stone
+                'images/Key.png',   // Row 3 of 3 of stone
+                'images/Heart.png',
+                'images/Star.png'  // 5th char right-most
+            ]
+
+
+    this.x = x;
+    this.y = y;
+    this.points = points;
+    this.show = 1;
+    this.sprite = this.BonusImages[5];
+}
+
+BonusObjects.prototype.update = function(){
+    this.show = 0;
+};
+
+BonusObjects.prototype.render = function(){
+    if (this.show === 1) {
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    }
+};
+
 // Enemies our player must avoid
 var Enemy = function(x, y, speed) {
     // Variables applied to each of our instances go here,
@@ -26,17 +82,15 @@ Enemy.prototype.update = function(dt) {
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
+
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+
 };
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 
-
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
 
 var Player = function(chosen = 0){
     this.avatarImages = [
@@ -96,6 +150,8 @@ Player.prototype.handleInput = function(direction){
 
 };
 
+//This is the object of the movable selection box for character selection
+
 var SelectionBox = function(){
     this.x = 101*2;
     this.y = 83*5-45;
@@ -118,7 +174,8 @@ SelectionBox.prototype.update = function(xChange) {
 };
 
 SelectionBox.prototype.changeColor = function(){
-    var colors = ["orangered", "tomato", "coral", "darkorange", "orange"];
+    var colors = ["orangered", "tomato", "coral", "darkorange", "orange",
+                  "darkorange", "coral", "tomato"];
 
     this.color = colors[Math.floor(this.colorCount/15)];
     if (this.colorCount+1 < 70){
@@ -142,7 +199,7 @@ SelectionBox.prototype.handleInput = function(direction){
         case 'enter':
             this.character = this.x/101;
             this.chosen = true;
-            chooseAvatar = 0;
+            gameState.state = 3;
             break;
         default:
             /* ... */
@@ -150,10 +207,19 @@ SelectionBox.prototype.handleInput = function(direction){
 
 };
 
+
+// Now instantiate your objects.
+// Place all enemy objects in an array called allEnemies
+// Place the player object in a variable called player
+
 var player;
 var allEnemies = [];
-var avatarChosen = 0;
+var allBonus = [];
+//var avatarChosen = 0;
 var selection;
+var gameState;
+
+gameState = new GameState();
 
 
 function resetPlayObjects(){
@@ -161,11 +227,15 @@ function resetPlayObjects(){
     selection = new SelectionBox();
     player = new Player();
     allEnemies = [];
+    allBonus = [];
     for (i=0; i < 5; i++){
         allEnemies.push(new Enemy(randomStart(-500)+200,(i%3+1)*83-20,randomSpeed(45)));
+        allBonus.push(new BonusObjects(randomStart(400),(i%3+1)*83-20, 5));
     }
     allEnemies.push(new Enemy(randomStart(-300), 1*83-20,randomSpeed(75)));
     allEnemies.push(new Enemy(randomStart(-500), 2*83-20,randomSpeed(60)));
+
+
 
 }
 
@@ -193,10 +263,10 @@ document.addEventListener('keydown', function(e) {
         13: 'enter',
     };
 
-    console.log(chooseAvatar);
-    if (chooseAvatar === 1){
+    console.log(gameState.state);
+    if (gameState.state === 0){
         selection.handleInput(allowedKeys[e.keyCode]);
-    } else{
+    } else if (gameState.state === 3) {
         player.handleInput(allowedKeys[e.keyCode]);
     }
 

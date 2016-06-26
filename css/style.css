@@ -22,6 +22,12 @@ h1 {
     background-color: steelblue;
 }
 
+.container {
+    float:left;
+    color: black;
+    font-size: 30px;
+}
+
 
 .up {
     width: 80px;
