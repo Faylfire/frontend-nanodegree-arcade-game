@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
     <title>Effective JavaScript: Frogger</title>
     <link rel="stylesheet" href="css/style.css">
 
@@ -10,14 +11,14 @@
 </head>
 <body>
     <h1>Frogger! Maybe...<h1>
-    <div class="dpad">
-        <button type="button" class="up">Up</button>
-        <button type="button" class="left">Left</button>
-        <button type="button" class="down">Down</button>
-        <button type="button" class = "right">Right</button>
+        <div class="dpad">
+            <button type="button" class="up">Up</button>
+            <button type="button" class="left">Left</button>
+            <button type="button" class="down">Down</button>
+            <button type="button" class = "right">Right</button>
 
-    </div>
-    <script type="text/javascript">
+        </div>
+        <script type="text/javascript">
         //var e = jQuery.Event("keydown");
         $(".up").on("click", function(){
             player.handleInput("up");
@@ -36,37 +37,47 @@
             console.log("right");
         });
 
-    </script>
-    <div class="container">
+        </script>
+        <div class="container sidebar">
 
-      <table class="table">
-        <thead>
-          <tr>
-            <th colspan="2">High Score</th>
-          </tr>
-          <tr>
-            <th>Player</th>
-            <th>Score</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Boy</td>
-            <td>100</td>
+          <table class="table">
+            <thead>
+              <tr>
+                <th colspan="2">High Score</th>
+            </tr>
+            <tr>
+                <th>Player</th>
+                <th>Score</th>
+            </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Boy</td>
+                <td>100</td>
+              </tr>
+              <tr>
+                <td>Cat Girl</td>
+                <td>85</td>
+              </tr>
+              <tr>
+                <td>Horn Girl</td>
+                <td>30</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="gameContainer">
 
-          </tr>
-          <tr>
-            <td>Cat Girl</td>
-            <td>85</td>
+        </div>
 
-          </tr>
-          <tr>
-            <td>Horn Girl</td>
-            <td>30</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+        <hr class="style-shadow"/>
+        <footer>
+          <div class="footerCont">
+            <a href="https://github.com/Faylfire/frontend-nanodegree-arcade-game" target="_blank">
+              <img class="ghlinks" src="images/GitHub_Mark.png" width="64px" height="64px" alt="GitHubLink">
+            </a>
+          </div>
+        </footer>
 
 
     <script src="js/resources.js"></script>
