@@ -1,11 +1,11 @@
 //Game State Object
 
-var GameState = function(topScore = [['Boy',100],['Cat Girl',85],['Horn Girl',5]]){
+var GameState = function(topScore){
     var stateArray = ["Selection", "Win", "Loss", "Play", "Top Score"]
 
     this.state = 0;
     this.score = 0;
-    this.topScore = topScore;
+    this.topScore = topScore || [['Boy',100],['Cat Girl',85],['Horn Girl',5]];
 
 };
 
@@ -109,7 +109,7 @@ Enemy.prototype.render = function() {
 // a handleInput() method.
 
 
-var Player = function(chosen = 0){
+var Player = function(chosen){
     this.avatarImages = [
                 'images/char-boy.png',   // 1st char
                 'images/char-cat-girl.png',   // Row 1 of 3 of stone
@@ -117,7 +117,7 @@ var Player = function(chosen = 0){
                 'images/char-pink-girl.png',   // Row 3 of 3 of stone
                 'images/char-princess-girl.png'   // 5th char right-most
             ]
-
+    chosen = chosen || 0;
     this.sprite = this.avatarImages[chosen];
     this.x = 101*2;
     this.y = 83*5-20;
