@@ -3,6 +3,19 @@ body {
     background-color: gainsboro;
     margin:0px;
     padding:0px;
+
+}
+
+.fullContainer{
+    width:75%;
+    display: -webkit- box;
+    display: -ms-flexbox;
+    display: -moz-flex;
+    display: -webkit-flex;
+    display: flex;
+    flex-wrap: wrap;
+    margin:auto;
+
 }
 
 canvas {
@@ -47,13 +60,20 @@ hr.style-shadow{
 }
 
 .table {
-    float:left;
+    margin: 20% auto;
     color: black;
-    font-size: 30px;
+    font-size: 1em;
+
 }
 
 .sidebar {
-    margin-left:15%;
+    width: 20%;
+
+}
+
+#gameContainer{
+    width:80%;
+
 }
 
 .up {
