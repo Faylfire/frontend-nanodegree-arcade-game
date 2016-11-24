@@ -293,7 +293,11 @@ document.addEventListener('keydown', function(e) {
         13: 'enter',
     };
 
-    console.log(gameState.state);
+    if([13, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+        e.preventDefault();
+    }
+
+    //console.log(gameState.state);
     if (gameState.state === 0){
         console.log("selection: "+ allowedKeys[e.keyCode]);
         selection.handleInput(allowedKeys[e.keyCode]);
