@@ -15,6 +15,10 @@ h1 {
     color: teal;
 }
 
+p {
+    font-size: 24px;
+}
+
 
 /* Horizontal Rule for footer separation*/
 hr{
