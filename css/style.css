@@ -67,7 +67,7 @@ hr.style-shadow{
 .table {
     margin: 20% auto;
     color: black;
-    font-size: 1em;
+    font-size: .75em;
 
 }
 
@@ -89,4 +89,32 @@ hr.style-shadow{
 button {
     height:48px;
     width:48px;
+}
+
+
+
+/*Media Query Overrides*/
+@media only screen and (max-width: 1200px) {
+    .fullContainer{
+        width: 90%;
+    }
+
+}
+
+@media only screen and (max-width: 1000px) {
+    .fullContainer{
+        width: 100%;
+    }
+}
+
+
+@media only screen and (max-width: 850px) {
+    .sidebar {
+        display: none;
+    }
+    #gameContainer{
+        width:100%;
+
+    }
+
 }
