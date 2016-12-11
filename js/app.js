@@ -5,7 +5,7 @@ var GameState = function(topScore){
 
     this.state = 0;
     this.score = 0;
-    this.topScore = topScore || [['Bug Boy',100],['Kittie',85],['Horns',5]];
+    this.topScore = topScore || [['Justa Boy',100],['Kitty Chan',85],['Horny Dame',5]];
 
 };
 
@@ -21,9 +21,9 @@ function Comparator(a, b) {
 
 GameState.prototype.update = function() {
     var avatar = [
-                'Bug Boy',   // 1st char
-                'Kittie',   // Row 1 of 3 of stone
-                'Horns',   // Row 2 of 3 of stone
+                'Justa Boy',   // 1st char
+                'Kitty Chan',   // Row 1 of 3 of stone
+                'Horny Dame',   // Row 2 of 3 of stone
                 'Pink',   // Row 3 of 3 of stone
                 'Queenie'   // 5th char right-most
             ]
